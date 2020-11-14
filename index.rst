@@ -18,10 +18,12 @@ Getting Started
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
+   :caption: Contents
 
    quickstart
-   workflow
-   # modules
+   extractors
+   validators
+
+
 
 

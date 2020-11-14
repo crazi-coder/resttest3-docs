@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>WrokFlow &mdash; API Testing Tool (resttest3) v1.0.2 documentation</title>
+  <title>Workflow Testing &mdash; API Testing Tool (resttest3) v1.0.2 documentation</title>
   
 
   
@@ -35,8 +35,7 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Getting Started" href="quickstart.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,9 +85,8 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">WrokFlow</a></li>
 </ul>
 
             
@@ -135,7 +133,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>WrokFlow</li>
+      <li>Workflow Testing</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,8 +152,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="wrokflow">
-<h1>WrokFlow<a class="headerlink" href="#wrokflow" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="workflow-testing">
+<h1>Workflow Testing<a class="headerlink" href="#workflow-testing" title="Permalink to this headline">¶</a></h1>
+<p>Workflow testing is a type of API testing, which checks that the each api and the related API return the desired outcome.
+This usually involves getting the access information such as token or basic auth information and pass over the several stages or steps.
+For any business process, testing of these sequential steps is defined as “WorkFlow Testing”.</p>
+<div class="section" id="workflow-testing-example">
+<h2>Workflow Testing Example<a class="headerlink" href="#workflow-testing-example" title="Permalink to this headline">¶</a></h2>
+<p>Lets have an example to search github user <strong>crazi-coder</strong> and go over the list of repos</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">config</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">testset</span><span class="p">:</span> <span class="s">&quot;Testing</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">github</span><span class="nv"> </span><span class="s">api&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">variable_binds</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="s">&#39;search_term&#39;</span><span class="p p-Indicator">:</span> <span class="s">&#39;crazi-coder&#39;</span><span class="p p-Indicator">}</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">test</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&quot;search</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">crazi-coder&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">url</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="s">&#39;template&#39;</span><span class="p p-Indicator">:</span> <span class="s">&#39;/search/users?q=$search_term&#39;</span><span class="p p-Indicator">}</span>
+    <span class="p p-Indicator">-</span> <span class="nt">expected_status</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">200</span><span class="p p-Indicator">]</span>
+    <span class="p p-Indicator">-</span> <span class="nt">group</span><span class="p">:</span> <span class="s">&quot;Github&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">delay</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="p p-Indicator">-</span> <span class="nt">extract_binds</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;repos&#39;</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{</span><span class="s">&#39;jsonpath_mini&#39;</span><span class="p p-Indicator">:</span> <span class="s">&#39;items.0.repos_url&#39;</span><span class="p p-Indicator">}</span>
+    <span class="p p-Indicator">-</span> <span class="nt">validators</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">compare</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="s">&quot;jsonpath_mini&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;total_count&quot;</span><span class="p p-Indicator">,</span><span class="nt"> comparator</span><span class="p">:</span> <span class="s">&quot;eq&quot;</span><span class="p p-Indicator">,</span><span class="nt"> expected</span><span class="p">:</span> <span class="nv">1</span><span class="p p-Indicator">}</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">test</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&quot;Getting</span><span class="nv"> </span><span class="s">list</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">repos&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">url</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="s">&#39;template&#39;</span><span class="p p-Indicator">:</span> <span class="s">&#39;$followers&#39;</span><span class="p p-Indicator">}</span>
+    <span class="p p-Indicator">-</span> <span class="nt">absolute_urls</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="p p-Indicator">-</span> <span class="nt">expected_status</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">200</span><span class="p p-Indicator">]</span>
+    <span class="p p-Indicator">-</span> <span class="nt">group</span><span class="p">:</span> <span class="s">&quot;Github&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">delay</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+</pre></div>
+</div>
+<p>Declare Variable</p>
+</div>
 </div>
 
 
@@ -163,13 +193,6 @@
            
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="quickstart.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>

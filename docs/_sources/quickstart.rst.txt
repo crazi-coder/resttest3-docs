@@ -245,3 +245,13 @@ A Bearer Token is an opaque string, not intended to have any meaning to clients 
             - json_schema: {schema: {file: './schema/error_response.json'}}
             - compare: {"jsonpath_mini": "status", comparator: "str_eq", expected: "FAILURE"}
 
+
+Declare Variable
+----------------
+yet to document
+Bind Response Values
+--------------------
+yet to document
+Templating
+-----------
+yet to document
