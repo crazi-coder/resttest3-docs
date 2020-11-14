@@ -1,0 +1,941 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>resttest3.testcase &mdash; API Testing Tool (resttest3) v1.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> API Testing Tool (resttest3)
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">WrokFlow</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">API Testing Tool (resttest3)</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>resttest3.testcase</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for resttest3.testcase</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urljoin</span>
+
+<span class="kn">import</span> <span class="nn">pycurl</span>
+
+<span class="kn">from</span> <span class="nn">resttest3.binding</span> <span class="kn">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">resttest3.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AuthType</span><span class="p">,</span> <span class="n">YamlKeyWords</span><span class="p">,</span> <span class="n">TestCaseKeywords</span><span class="p">,</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">,</span> <span class="n">EnumHttpMethod</span><span class="p">,</span> <span class="n">FAILURE_CURL_EXCEPTION</span><span class="p">,</span>
+    <span class="n">FAILURE_TEST_EXCEPTION</span><span class="p">,</span> <span class="n">FAILURE_INVALID_RESPONSE</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">resttest3.contenthandling</span> <span class="kn">import</span> <span class="n">ContentHandler</span>
+<span class="kn">from</span> <span class="nn">resttest3.exception</span> <span class="kn">import</span> <span class="n">HttpMethodError</span><span class="p">,</span> <span class="n">BindError</span><span class="p">,</span> <span class="n">ValidatorError</span>
+<span class="kn">from</span> <span class="nn">resttest3.generators</span> <span class="kn">import</span> <span class="n">parse_generator</span>
+<span class="kn">from</span> <span class="nn">resttest3.utils</span> <span class="kn">import</span> <span class="n">read_testcase_file</span><span class="p">,</span> <span class="n">ChangeDir</span><span class="p">,</span> <span class="n">Parser</span>
+<span class="kn">from</span> <span class="nn">resttest3.validators</span> <span class="kn">import</span> <span class="n">parse_extractor</span><span class="p">,</span> <span class="n">parse_validator</span><span class="p">,</span> <span class="n">Failure</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;resttest3&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TestCaseConfig"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCaseConfig">[docs]</a><span class="k">class</span> <span class="nc">TestCaseConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Global configuration for a testset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">60</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_bodies</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retries</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generators</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">variable_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds_dict</span>
+
+    <span class="nd">@variable_binds</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">variable_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Variable binding &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variable_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">variable_dict</span><span class="p">))</span>
+
+<div class="viewcode-block" id="TestCaseConfig.parse"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCaseConfig.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_node</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_lowercase_keys_dict</span><span class="p">(</span><span class="n">config_node</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;timeout&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="sa">u</span><span class="s1">&#39;print_bodies&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_bodies</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">safe_to_bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;retries&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">retries</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;variable_binds&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">variable_binds</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="sa">u</span><span class="s1">&#39;generators&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;generators in config should defined as list(array).&quot;</span><span class="p">)</span>
+                <span class="n">flat</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">gen_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">generator_name</span><span class="p">,</span> <span class="n">generator_config</span> <span class="ow">in</span> <span class="n">flat</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">gen</span> <span class="o">=</span> <span class="n">parse_generator</span><span class="p">(</span><span class="n">generator_config</span><span class="p">)</span>
+                    <span class="n">gen_dict</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">generator_name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">gen</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generators</span> <span class="o">=</span> <span class="n">gen_dict</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Parser</span><span class="o">.</span><span class="n">safe_to_json</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestSet"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestSet">[docs]</a><span class="k">class</span> <span class="nc">TestSet</span><span class="p">:</span>
+    <span class="n">__testcase_file</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">test_group_list_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extract_binds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">TestCaseConfig</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TestSet.parse"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestSet.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testcase_list</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">test_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variable_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">working_directory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">working_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">working_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">working_directory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">variable_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">variable_binds</span> <span class="o">=</span> <span class="n">variable_dict</span>
+        <span class="k">if</span> <span class="n">test_file</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_file</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">test_file</span><span class="p">)</span>
+
+        <span class="n">testcase_config_object</span> <span class="o">=</span> <span class="n">TestCaseConfig</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">testcase_node</span> <span class="ow">in</span> <span class="n">testcase_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">testcase_node</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Skipping the configuration </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">testcase_node</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">testcase_node</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">lowercase_keys</span><span class="p">(</span><span class="n">testcase_node</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">testcase_node</span><span class="p">:</span>
+                <span class="n">sub_testcase_node</span> <span class="o">=</span> <span class="n">testcase_node</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">YamlKeyWords</span><span class="o">.</span><span class="n">INCLUDE</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_testcase_node</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;include should be list not </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">sub_testcase_node</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">testcase_file_path</span> <span class="ow">in</span> <span class="n">sub_testcase_node</span><span class="p">:</span>
+                        <span class="n">testcase_file_path</span> <span class="o">=</span> <span class="n">testcase_file_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                        <span class="n">testcase_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">working_directory</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.yaml&quot;</span> <span class="o">%</span> <span class="n">testcase_file_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+                        <span class="k">if</span> <span class="n">testcase_file</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_file</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_file</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">testcase_file</span><span class="p">)</span>
+                            <span class="n">import_testcase_list</span> <span class="o">=</span> <span class="n">read_testcase_file</span><span class="p">(</span><span class="n">testcase_file</span><span class="p">)</span>
+                            <span class="k">with</span> <span class="n">ChangeDir</span><span class="p">(</span><span class="n">working_directory</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">import_testcase_list</span><span class="p">,</span> <span class="n">variable_dict</span><span class="o">=</span><span class="n">variable_dict</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="n">YamlKeyWords</span><span class="o">.</span><span class="n">IMPORT</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">sub_testcase_node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_file</span><span class="p">:</span>
+                        <span class="n">testcase_file_path</span> <span class="o">=</span> <span class="n">sub_testcase_node</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Importing testcase from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">testcase_file_path</span><span class="p">)</span>
+                        <span class="n">testcase_file_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">working_directory</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">testcase_file_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_file</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sub_testcase_node</span><span class="p">)</span>
+                        <span class="n">import_testcase_list</span> <span class="o">=</span> <span class="n">read_testcase_file</span><span class="p">(</span><span class="n">testcase_file_path</span><span class="p">)</span>
+                        <span class="k">with</span> <span class="n">ChangeDir</span><span class="p">(</span><span class="n">working_directory</span><span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">import_testcase_list</span><span class="p">,</span> <span class="n">variable_dict</span><span class="o">=</span><span class="n">variable_dict</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="n">YamlKeyWords</span><span class="o">.</span><span class="n">URL</span><span class="p">:</span>
+                    <span class="n">__group_name</span> <span class="o">=</span> <span class="n">TestCaseGroup</span><span class="o">.</span><span class="n">DEFAULT_GROUP</span>
+                    <span class="n">group_object</span> <span class="o">=</span> <span class="n">TestSet</span><span class="o">.</span><span class="n">__create_test</span><span class="p">(</span><span class="n">__group_name</span><span class="p">,</span> <span class="n">testcase_config_object</span><span class="p">)</span>
+                    <span class="n">testcase_object</span> <span class="o">=</span> <span class="n">TestCase</span><span class="p">(</span>
+                        <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">,</span> <span class="n">extract_binds</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">extract_binds</span><span class="p">,</span>
+                        <span class="n">variable_binds</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">variable_binds</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+                        <span class="n">config</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">config</span>
+                    <span class="p">)</span>
+                    <span class="n">testcase_object</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">testcase_node</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">group_object</span><span class="o">.</span><span class="n">testcase_list</span> <span class="o">=</span> <span class="n">testcase_object</span>
+
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="n">YamlKeyWords</span><span class="o">.</span><span class="n">TEST</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="n">ChangeDir</span><span class="p">(</span><span class="n">working_directory</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">parse_test</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">sub_testcase_node</span><span class="p">,</span> <span class="n">testcase_config_object</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="n">YamlKeyWords</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">:</span>
+                    <span class="n">testcase_config_object</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sub_testcase_node</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">testcase_config_object</span></div>
+
+<div class="viewcode-block" id="TestSet.parse_test"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestSet.parse_test">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_test</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">sub_testcase_node</span><span class="p">,</span> <span class="n">testcase_config_object</span><span class="p">):</span>
+        <span class="n">__group_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">node_dict</span> <span class="ow">in</span> <span class="n">sub_testcase_node</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">__group_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">__group_name</span> <span class="o">=</span> <span class="n">node_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
+        <span class="n">__group_name</span> <span class="o">=</span> <span class="n">__group_name</span> <span class="k">if</span> <span class="n">__group_name</span> <span class="k">else</span> <span class="n">TestCaseGroup</span><span class="o">.</span><span class="n">DEFAULT_GROUP</span>
+        <span class="n">group_object</span> <span class="o">=</span> <span class="n">TestSet</span><span class="o">.</span><span class="n">__create_test</span><span class="p">(</span><span class="n">__group_name</span><span class="p">,</span> <span class="n">testcase_config_object</span><span class="p">)</span>
+        <span class="n">testcase_object</span> <span class="o">=</span> <span class="n">TestCase</span><span class="p">(</span>
+            <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">,</span> <span class="n">extract_binds</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">extract_binds</span><span class="p">,</span>
+            <span class="n">variable_binds</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">variable_binds</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">group_object</span><span class="o">.</span><span class="n">config</span>
+        <span class="p">)</span>
+        <span class="n">testcase_object</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sub_testcase_node</span><span class="p">)</span>
+        <span class="n">group_object</span><span class="o">.</span><span class="n">testcase_list</span> <span class="o">=</span> <span class="n">testcase_object</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__create_test</span><span class="p">(</span><span class="n">__group_name</span><span class="p">,</span> <span class="n">testcase_config_object</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">group_object</span> <span class="o">=</span> <span class="n">TestSet</span><span class="o">.</span><span class="n">test_group_list_dict</span><span class="p">[</span><span class="n">__group_name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">group_object</span> <span class="o">=</span> <span class="n">TestCaseGroup</span><span class="p">(</span><span class="n">TestCaseGroup</span><span class="o">.</span><span class="n">DEFAULT_GROUP</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">testcase_config_object</span><span class="p">)</span>
+            <span class="n">TestSet</span><span class="o">.</span><span class="n">test_group_list_dict</span><span class="p">[</span><span class="n">__group_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_object</span>
+        <span class="k">return</span> <span class="n">group_object</span></div>
+
+
+<div class="viewcode-block" id="TestCaseGroup"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCaseGroup">[docs]</a><span class="k">class</span> <span class="nc">TestCaseGroup</span><span class="p">:</span>
+    <span class="n">DEFAULT_GROUP</span> <span class="o">=</span> <span class="s2">&quot;NO GROUP&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extract_binds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variable_binds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__benchmark_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__config</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_file</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__context</span> <span class="o">=</span> <span class="n">context</span> <span class="k">if</span> <span class="n">context</span> <span class="k">else</span> <span class="n">Context</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extract_binds</span> <span class="o">=</span> <span class="n">extract_binds</span> <span class="k">if</span> <span class="n">extract_binds</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds</span> <span class="o">=</span> <span class="n">variable_binds</span> <span class="k">if</span> <span class="n">variable_binds</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__is_global</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">testcase_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_list</span>
+
+    <span class="nd">@testcase_list</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">testcase_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testcase_object</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__testcase_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">testcase_object</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_global</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_global</span>
+
+    <span class="nd">@is_global</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">is_global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_global</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__is_global</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">benchmark_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__benchmark_list</span>
+
+    <span class="nd">@benchmark_list</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">benchmark_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark_objet</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__benchmark_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">benchmark_objet</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extract_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__extract_binds</span>
+
+    <span class="nd">@extract_binds</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">extract_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extract_dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extract_binds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extract_dict</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">variable_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds</span>
+
+    <span class="nd">@variable_binds</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">variable_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">var_dict</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__config</span>
+
+    <span class="nd">@config</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_obj</span><span class="p">:</span> <span class="n">TestCaseConfig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__config</span> <span class="o">=</span> <span class="n">config_obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variable_binds</span> <span class="o">=</span> <span class="n">config_obj</span><span class="o">.</span><span class="n">variable_binds</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__context</span></div>
+
+
+<div class="viewcode-block" id="TestResult"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestResult">[docs]</a><span class="k">class</span> <span class="nc">TestResult</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">status_code</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__headers</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__status_code</span> <span class="o">=</span> <span class="n">status_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__status</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__elapsed</span> <span class="o">=</span> <span class="mf">0.000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">failures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span>
+
+    <span class="nd">@failures</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">failures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__headers</span>
+
+    <span class="nd">@headers</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__headers</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">:</span>
+    <span class="n">DEFAULT_NAME</span> <span class="o">=</span> <span class="s2">&quot;NO NAME&quot;</span>
+
+    <span class="n">KEYWORD_DICT</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_url</span><span class="p">,</span> <span class="n">extract_binds</span><span class="p">,</span> <span class="n">variable_binds</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__base_url</span> <span class="o">=</span> <span class="n">base_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__url</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__config</span> <span class="o">=</span> <span class="n">config</span> <span class="k">if</span> <span class="n">config</span> <span class="k">else</span> <span class="n">TestCaseConfig</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__auth_username</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__auth_password</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__delay</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__verbose</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__ssl_insecure</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__response_headers</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__response_code</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__passed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__abs_url</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__http_method</span> <span class="o">=</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__group</span> <span class="o">=</span> <span class="n">TestCaseGroup</span><span class="o">.</span><span class="n">DEFAULT_GROUP</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">DEFAULT_NAME</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_should_stop_on_failure</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_test_run_delay</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_auth_type</span> <span class="o">=</span> <span class="n">AuthType</span><span class="o">.</span><span class="n">BASIC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_curl_options</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds_dict</span> <span class="o">=</span> <span class="n">variable_binds</span> <span class="k">if</span> <span class="n">variable_binds</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__generator_binds_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extract_binds_dict</span> <span class="o">=</span> <span class="n">extract_binds</span> <span class="k">if</span> <span class="n">extract_binds</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__validator_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__expected_http_status_code_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span> <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">context</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">templates</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Parser</span><span class="o">.</span><span class="n">safe_to_json</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TestCaseConfig</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__config</span>
+
+    <span class="nd">@config</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_object</span><span class="p">:</span> <span class="n">TestCaseConfig</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config_object</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variable_binds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config_object</span><span class="o">.</span><span class="n">variable_binds</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generator_binds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config_object</span><span class="o">.</span><span class="n">generators</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">auth_username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__auth_username</span>
+
+    <span class="nd">@auth_username</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">auth_username</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__auth_username</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">coerce_string_to_ascii</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">auth_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__auth_password</span>
+
+    <span class="nd">@auth_password</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">auth_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__auth_password</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">coerce_string_to_ascii</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">http_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__http_method</span>
+
+    <span class="nd">@http_method</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">http_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">__method</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">__method</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">HttpMethodError</span><span class="p">(</span><span class="s2">&quot;Method </span><span class="si">%s</span><span class="s2"> is not supported.&quot;</span> <span class="o">%</span> <span class="n">method</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__http_method</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__group</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_passed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__passed</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">realize_template</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__context</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__url</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__abs_url</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__base_url</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;URL is not applied template values.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+    <span class="nd">@url</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="c1"># this is the templated url , we need to convert it into actual URL</span>
+            <span class="n">template_str</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">lowercase_keys</span><span class="p">(</span><span class="n">value</span><span class="p">)[</span><span class="s1">&#39;template&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_template</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">Parser</span><span class="o">.</span><span class="n">coerce_to_string</span><span class="p">(</span><span class="n">template_str</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__url</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__url</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">generator_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generator_binds_dict</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__delay</span>
+
+    <span class="nd">@generator_binds</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">generator_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="n">binds_dict</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">__binds_dict</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">binds_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__generator_binds_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">__binds_dict</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">variable_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds_dict</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extract_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__extract_binds_dict</span>
+
+    <span class="nd">@extract_binds</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">extract_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_dict</span><span class="p">):</span>
+
+        <span class="n">bind_dict</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">bind_dict</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">extractor</span> <span class="ow">in</span> <span class="n">bind_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extractor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">extractor</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">BindError</span><span class="p">(</span><span class="s2">&quot;Extractors must be defined as maps of extractorType:</span><span class="si">{configs}</span><span class="s2"> with 1 entry&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extractor</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">BindError</span><span class="p">(</span><span class="s2">&quot;Cannot define multiple extractors for given variable name&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">extractor_type</span><span class="p">,</span> <span class="n">extractor_config</span> <span class="ow">in</span> <span class="n">extractor</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__extract_binds_dict</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_extractor</span><span class="p">(</span><span class="n">extractor_type</span><span class="p">,</span> <span class="n">extractor_config</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">expected_http_status_code_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__expected_http_status_code_list</span><span class="p">]</span>
+
+    <span class="nd">@expected_http_status_code_list</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">expected_http_status_code_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__expected_http_status_code_list</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">validators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__validator_list</span>
+
+    <span class="nd">@validators</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">validators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validator_list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">validator_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidatorError</span><span class="p">(</span><span class="s1">&#39;Misconfigured validator section, must be a list of validators&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">validator</span> <span class="ow">in</span> <span class="n">validator_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ValidatorError</span><span class="p">(</span><span class="s2">&quot;Validators must be defined as validatorType:</span><span class="si">{configs}</span><span class="s2"> &quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">validator_type</span><span class="p">,</span> <span class="n">validator_config</span> <span class="ow">in</span> <span class="n">validator</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">validator</span> <span class="o">=</span> <span class="n">parse_validator</span><span class="p">(</span><span class="n">validator_type</span><span class="p">,</span> <span class="n">validator_config</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__validator_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validator</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="c1"># if not self.templates.get(&#39;headers&#39;):</span>
+        <span class="c1">#     return self.__header_dict</span>
+        <span class="n">context_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__context</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
+        <span class="n">header_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">header</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__header_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;template&#39;</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">templated_string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">safe_substitute</span><span class="p">(</span><span class="n">context_values</span><span class="p">)</span>
+                        <span class="n">header_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">templated_string</span>
+                    <span class="k">continue</span>
+                <span class="n">templated_value</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">templated_value</span><span class="p">:</span>
+                    <span class="n">templated_string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">templated_value</span><span class="p">)</span><span class="o">.</span><span class="n">safe_substitute</span><span class="p">(</span><span class="n">context_values</span><span class="p">)</span>
+                    <span class="n">header_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">templated_string</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Skipping the header: </span><span class="si">%s</span><span class="s2">. We don&#39;t support mapping as header&quot;</span> <span class="o">%</span> <span class="n">header</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">header_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span>
+
+        <span class="k">return</span> <span class="n">header_dict</span>
+
+    <span class="nd">@headers</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="p">):</span>
+        <span class="n">config_value</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">config_value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;template&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">set_template</span><span class="p">(</span><span class="s2">&quot;headers&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;template&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__header_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidatorError</span><span class="p">(</span><span class="s2">&quot;Illegal header type: headers must be a dictionary or list of dictionary keys&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TestCase.set_template"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.set_template">[docs]</a>    <span class="k">def</span> <span class="nf">set_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">template_string</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">template_string</span><span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">body</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__body</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__body</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__body</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__context</span><span class="p">)</span>
+
+    <span class="nd">@body</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="o">=</span> <span class="n">ContentHandler</span><span class="o">.</span><span class="n">parse_content</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="o">=</span> <span class="n">ContentHandler</span><span class="o">.</span><span class="n">parse_content</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">failures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span>
+
+<div class="viewcode-block" id="TestCase.realize_template"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.realize_template">[docs]</a>    <span class="k">def</span> <span class="nf">realize_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">context</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">variable_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="o">.</span><span class="n">get_values</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span><span class="o">.</span><span class="n">safe_substitute</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">get_values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="TestCase.parse"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testcase_dict</span><span class="p">):</span>
+        <span class="n">testcase_dict</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_lowercase_keys_dict</span><span class="p">(</span><span class="n">testcase_dict</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">KEYWORD_DICT</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">testcase_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">auth_username</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">auth_username</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">auth_password</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">auth_password</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">method</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">delay</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__delay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__group</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">url</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">extract_binds</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extract_binds</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">validators</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">validators</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">variable_binds</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__variable_binds_dict</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">generator_binds</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__generator_binds_dict</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">value</span><span class="p">)}</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Yet to Support&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">keyword</span> <span class="o">==</span> <span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">absolute_urls</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__abs_url</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">safe_to_bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">expected_status</span> <span class="o">=</span> <span class="n">testcase_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">TestCaseKeywords</span><span class="o">.</span><span class="n">expected_status</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">expected_status</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">expected_http_status_code_list</span> <span class="o">=</span> <span class="n">expected_status</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">expected_http_status_code_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">204</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TestCase.pre_update"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.pre_update">[docs]</a>    <span class="k">def</span> <span class="nf">pre_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_binds</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">bind_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variable_binds</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator_binds</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator_binds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">context</span><span class="o">.</span><span class="n">bind_generator_next</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestCase.post_update"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.post_update">[docs]</a>    <span class="k">def</span> <span class="nf">post_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_binds</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_binds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+                    <span class="n">body</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="n">context</span><span class="o">.</span><span class="n">bind_variable</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestCase.is_dynamic"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.is_dynamic">[docs]</a>    <span class="k">def</span> <span class="nf">is_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__body</span><span class="p">,</span> <span class="n">ContentHandler</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__body</span><span class="o">.</span><span class="n">is_dynamic</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="TestCase.render"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_dynamic</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__body</span><span class="p">,</span> <span class="n">ContentHandler</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__body</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__context</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__perform_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+
+        <span class="n">failure_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">validator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">validators</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running validator: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">validator</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">validate_result</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__context</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">validate_result</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__passed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">validate_result</span><span class="p">,</span> <span class="s1">&#39;details&#39;</span><span class="p">):</span>
+                <span class="n">failure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validate_result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">failure_list</span>
+
+<div class="viewcode-block" id="TestCase.run"><a class="viewcode-back" href="../../resttest3.html#resttest3.testcase.TestCase.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curl_handler</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__context</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_update</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">timeout</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span>
+
+        <span class="k">if</span> <span class="n">curl_handler</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>  <span class="c1"># Check the curl handle isn&#39;t closed, and reuse it if possible</span>
+                <span class="n">curl_handler</span><span class="o">.</span><span class="n">getinfo</span><span class="p">(</span><span class="n">curl_handler</span><span class="o">.</span><span class="n">HTTP_CODE</span><span class="p">)</span>
+                <span class="c1"># Below clears the cookies &amp; curl options for clean run</span>
+                <span class="c1"># But retains the DNS cache and connection pool</span>
+                <span class="n">curl_handler</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">curl_handler</span><span class="o">.</span><span class="n">COOKIELIST</span><span class="p">,</span> <span class="s2">&quot;ALL&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="n">curl_handler</span> <span class="o">=</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">Curl</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">curl_handler</span> <span class="o">=</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">Curl</span><span class="p">()</span>
+
+        <span class="n">body_byte</span><span class="p">,</span> <span class="n">header_byte</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__default_curl_config</span><span class="p">(</span><span class="n">curl_handler</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">CONNECTTIMEOUT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ssl_insecure</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">SSL_VERIFYPEER</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">SSL_VERIFYHOST</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Request body </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">curl_handler</span><span class="o">.</span><span class="n">READFUNCTION</span><span class="p">,</span> <span class="n">BytesIO</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_password</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">USERPWD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_username</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_password</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__configure_curl_method</span><span class="p">(</span><span class="n">curl_handler</span><span class="p">)</span>
+
+        <span class="n">head</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__configure_curl_headers</span><span class="p">(</span><span class="n">curl_handler</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__delay</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__delay</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Hitting </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unknown Exception&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__passed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">trace</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Failure</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Curl Exception: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">details</span><span class="o">=</span><span class="n">trace</span><span class="p">,</span> <span class="n">failure_type</span><span class="o">=</span><span class="n">FAILURE_CURL_EXCEPTION</span><span class="p">))</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body_byte</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+        <span class="n">body_byte</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">response_code</span> <span class="o">=</span> <span class="n">curl_handler</span><span class="o">.</span><span class="n">getinfo</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">RESPONSE_CODE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__response_code</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response_code</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">print_bodies</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response_headers</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">parse_headers</span><span class="p">(</span><span class="n">header_byte</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__response_headers</span> <span class="o">=</span> <span class="n">response_headers</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;RESPONSE HEADERS: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__response_headers</span><span class="p">)</span>
+            <span class="n">header_byte</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># Need to catch the expected exception</span>
+            <span class="n">trace</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Failure</span><span class="p">(</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Header parsing exception: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">details</span><span class="o">=</span><span class="n">trace</span><span class="p">,</span> <span class="n">failure_type</span><span class="o">=</span><span class="n">FAILURE_TEST_EXCEPTION</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__passed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__response_code</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_http_status_code_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__passed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__perform_validation</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">post_update</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__passed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">failure_message</span> <span class="o">=</span> <span class="s2">&quot;Invalid HTTP response code: response code </span><span class="si">{0}</span><span class="s2"> not in expected codes </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__response_code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_http_status_code_list</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__failure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Failure</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">failure_message</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">failure_type</span><span class="o">=</span><span class="n">FAILURE_INVALID_RESPONSE</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">curl_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__configure_curl_headers</span><span class="p">(</span><span class="n">curl_handler</span><span class="p">,</span> <span class="n">head</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">head</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content-type&#39;</span><span class="p">):</span>
+            <span class="n">content_type</span> <span class="o">=</span> <span class="n">head</span><span class="p">[</span><span class="s1">&#39;content-type&#39;</span><span class="p">]</span>
+            <span class="n">head</span><span class="p">[</span><span class="sa">u</span><span class="s1">&#39;content-type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ; charset=UTF-8&#39;</span> <span class="o">%</span> <span class="n">content_type</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">header_name</span><span class="p">,</span> <span class="n">header_value</span><span class="p">)</span> <span class="k">for</span> <span class="n">header_name</span><span class="p">,</span> <span class="n">header_value</span> <span class="ow">in</span> <span class="n">head</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Expect:&quot;</span><span class="p">)</span>
+        <span class="n">headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Connection: close&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Request headers </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">head</span><span class="p">)</span>
+        <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">curl_handler</span><span class="o">.</span><span class="n">HTTPHEADER</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__configure_curl_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curl_handler</span><span class="p">):</span>
+        <span class="n">body_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span> <span class="o">==</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">POSTFIELDSIZE</span><span class="p">,</span> <span class="n">body_length</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span> <span class="o">==</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">PUT</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">PUT</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">INFILESIZE</span><span class="p">,</span> <span class="n">body_length</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span> <span class="o">==</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">PATCH</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">POSTFIELDS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span> <span class="o">==</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">DELETE</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">POSTFIELDS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+                <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">POSTFIELDSIZE</span><span class="p">,</span> <span class="n">body_length</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span> <span class="o">==</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">HEAD</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">NOBODY</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">HEAD</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">EnumHttpMethod</span><span class="o">.</span><span class="n">HEAD</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">CUSTOMREQUEST</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_method</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">POSTFIELDS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+                <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">POSTFIELDSIZE</span><span class="p">,</span> <span class="n">body_length</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__default_curl_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curl_handler</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+        <span class="n">body_byte</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+        <span class="n">header_byte</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+        <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">curl_handler</span><span class="o">.</span><span class="n">URL</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+        <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">curl_handler</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">WRITEFUNCTION</span><span class="p">,</span> <span class="n">body_byte</span><span class="o">.</span><span class="n">write</span><span class="p">)</span>
+        <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">HEADERFUNCTION</span><span class="p">,</span> <span class="n">header_byte</span><span class="o">.</span><span class="n">write</span><span class="p">)</span>
+        <span class="n">curl_handler</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__verbose</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body_byte</span><span class="p">,</span> <span class="n">header_byte</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Abhilash Joseph C
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

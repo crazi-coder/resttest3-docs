@@ -1,0 +1,1332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>resttest3 package &mdash; API Testing Tool (resttest3) v1.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> API Testing Tool (resttest3)
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow.html">WrokFlow</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">API Testing Tool (resttest3)</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>resttest3 package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/resttest3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="resttest3-package">
+<h1>resttest3 package<a class="headerlink" href="#resttest3-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resttest3.ext.html">resttest3.ext package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="resttest3.ext.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resttest3.ext.html#module-resttest3.ext.extractor_jmespath">resttest3.ext.extractor_jmespath module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resttest3.ext.html#module-resttest3.ext.validator_jsonschema">resttest3.ext.validator_jsonschema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resttest3.ext.html#module-resttest3.ext">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-resttest3.binding">
+<span id="resttest3-binding-module"></span><h2>resttest3.binding module<a class="headerlink" href="#module-resttest3.binding" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="resttest3.binding.Context">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.binding.</code><code class="sig-name descname">Context</code><a class="reference internal" href="_modules/resttest3/binding.html#Context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages binding of variables &amp; generators, with both variable name and generator name being strings</p>
+<dl class="py method">
+<dt id="resttest3.binding.Context.add_generator">
+<code class="sig-name descname">add_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">generator_name</span></em>, <em class="sig-param"><span class="n">generator</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.add_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.add_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a generator to the context, this can be used to set values for a variable
+Once created, you can set values with the generator via bind_generator_next</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.binding.Context.bind_generator_next">
+<code class="sig-name descname">bind_generator_next</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variable_name</span></em>, <em class="sig-param"><span class="n">generator_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.bind_generator_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.bind_generator_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binds the next value for generator_name to variable_name and return value used</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.binding.Context.bind_variable">
+<code class="sig-name descname">bind_variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variable_name</span></em>, <em class="sig-param"><span class="n">variable_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.bind_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.bind_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind a named variable to a value within the context
+This allows for passing in variables in testing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.binding.Context.bind_variables">
+<code class="sig-name descname">bind_variables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variable_map</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.bind_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.bind_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.binding.Context.get_generator">
+<code class="sig-name descname">get_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">generator_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.get_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.get_generator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.binding.Context.get_generators">
+<code class="sig-name descname">get_generators</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.get_generators"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.get_generators" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.binding.Context.get_value">
+<code class="sig-name descname">get_value</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variable_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get bound variable value, or return none if not set</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.binding.Context.get_values">
+<code class="sig-name descname">get_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/binding.html#Context.get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.binding.Context.get_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.constants">
+<span id="resttest3-constants-module"></span><h2>resttest3.constants module<a class="headerlink" href="#module-resttest3.constants" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="resttest3.constants.AuthType">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.constants.</code><code class="sig-name descname">AuthType</code><a class="reference internal" href="_modules/resttest3/constants.html#AuthType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.constants.AuthType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="resttest3.constants.AuthType.BASIC">
+<code class="sig-name descname">BASIC</code><em class="property"> = 1</em><a class="headerlink" href="#resttest3.constants.AuthType.BASIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.AuthType.NONE">
+<code class="sig-name descname">NONE</code><em class="property"> = 0</em><a class="headerlink" href="#resttest3.constants.AuthType.NONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.constants.EnumHttpMethod">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.constants.</code><code class="sig-name descname">EnumHttpMethod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/constants.html#EnumHttpMethod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.constants.EnumHttpMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="resttest3.constants.EnumHttpMethod.DELETE">
+<code class="sig-name descname">DELETE</code><em class="property"> = 10036</em><a class="headerlink" href="#resttest3.constants.EnumHttpMethod.DELETE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.EnumHttpMethod.GET">
+<code class="sig-name descname">GET</code><em class="property"> = 80</em><a class="headerlink" href="#resttest3.constants.EnumHttpMethod.GET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.EnumHttpMethod.HEAD">
+<code class="sig-name descname">HEAD</code><em class="property"> = 10036</em><a class="headerlink" href="#resttest3.constants.EnumHttpMethod.HEAD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.EnumHttpMethod.PATCH">
+<code class="sig-name descname">PATCH</code><em class="property"> = 10015</em><a class="headerlink" href="#resttest3.constants.EnumHttpMethod.PATCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.EnumHttpMethod.POST">
+<code class="sig-name descname">POST</code><em class="property"> = 47</em><a class="headerlink" href="#resttest3.constants.EnumHttpMethod.POST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.EnumHttpMethod.PUT">
+<code class="sig-name descname">PUT</code><em class="property"> = 46</em><a class="headerlink" href="#resttest3.constants.EnumHttpMethod.PUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.constants.TestCaseKeywords">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.constants.</code><code class="sig-name descname">TestCaseKeywords</code><a class="reference internal" href="_modules/resttest3/constants.html#TestCaseKeywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.constants.TestCaseKeywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.absolute_urls">
+<code class="sig-name descname">absolute_urls</code><em class="property"> = 'absolute-url'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.absolute_urls" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.auth_password">
+<code class="sig-name descname">auth_password</code><em class="property"> = 'auth_password'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.auth_password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.auth_username">
+<code class="sig-name descname">auth_username</code><em class="property"> = 'auth_username'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.auth_username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.body">
+<code class="sig-name descname">body</code><em class="property"> = 'body'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.body" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.delay">
+<code class="sig-name descname">delay</code><em class="property"> = 'delay'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.delay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.expected_status">
+<code class="sig-name descname">expected_status</code><em class="property"> = 'expected_status'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.expected_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.extract_binds">
+<code class="sig-name descname">extract_binds</code><em class="property"> = 'extract_binds'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.extract_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.generator_binds">
+<code class="sig-name descname">generator_binds</code><em class="property"> = 'generator_binds'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.generator_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.global_env">
+<code class="sig-name descname">global_env</code><em class="property"> = 'global_env'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.global_env" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.group">
+<code class="sig-name descname">group</code><em class="property"> = 'group'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.headers">
+<code class="sig-name descname">headers</code><em class="property"> = 'headers'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.method">
+<code class="sig-name descname">method</code><em class="property"> = 'method'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.name">
+<code class="sig-name descname">name</code><em class="property"> = 'name'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.options">
+<code class="sig-name descname">options</code><em class="property"> = 'options'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.stop_on_failure">
+<code class="sig-name descname">stop_on_failure</code><em class="property"> = 'stop_on_failure'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.stop_on_failure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.url">
+<code class="sig-name descname">url</code><em class="property"> = 'url'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.validators">
+<code class="sig-name descname">validators</code><em class="property"> = 'validators'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.validators" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.TestCaseKeywords.variable_binds">
+<code class="sig-name descname">variable_binds</code><em class="property"> = 'variable_binds'</em><a class="headerlink" href="#resttest3.constants.TestCaseKeywords.variable_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.constants.YamlKeyWords">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.constants.</code><code class="sig-name descname">YamlKeyWords</code><a class="reference internal" href="_modules/resttest3/constants.html#YamlKeyWords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.constants.YamlKeyWords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="resttest3.constants.YamlKeyWords.BENCHMARK">
+<code class="sig-name descname">BENCHMARK</code><em class="property"> = 'benchmark'</em><a class="headerlink" href="#resttest3.constants.YamlKeyWords.BENCHMARK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.YamlKeyWords.CONFIG">
+<code class="sig-name descname">CONFIG</code><em class="property"> = 'config'</em><a class="headerlink" href="#resttest3.constants.YamlKeyWords.CONFIG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.YamlKeyWords.IMPORT">
+<code class="sig-name descname">IMPORT</code><em class="property"> = 'import'</em><a class="headerlink" href="#resttest3.constants.YamlKeyWords.IMPORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.YamlKeyWords.INCLUDE">
+<code class="sig-name descname">INCLUDE</code><em class="property"> = 'include'</em><a class="headerlink" href="#resttest3.constants.YamlKeyWords.INCLUDE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.YamlKeyWords.TEST">
+<code class="sig-name descname">TEST</code><em class="property"> = 'test'</em><a class="headerlink" href="#resttest3.constants.YamlKeyWords.TEST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.constants.YamlKeyWords.URL">
+<code class="sig-name descname">URL</code><em class="property"> = 'url'</em><a class="headerlink" href="#resttest3.constants.YamlKeyWords.URL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.constants.regex_compare">
+<code class="sig-prename descclassname">resttest3.constants.</code><code class="sig-name descname">regex_compare</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_val</span></em>, <em class="sig-param"><span class="n">regex</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/constants.html#regex_compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.constants.regex_compare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.constants.safe_length">
+<code class="sig-prename descclassname">resttest3.constants.</code><code class="sig-name descname">safe_length</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">var</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/constants.html#safe_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.constants.safe_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception-safe length check, returns -1 if no length on type or error</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.constants.test_type">
+<code class="sig-prename descclassname">resttest3.constants.</code><code class="sig-name descname">test_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em>, <em class="sig-param"><span class="n">_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/constants.html#test_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.constants.test_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.contenthandling">
+<span id="resttest3-contenthandling-module"></span><h2>resttest3.contenthandling module<a class="headerlink" href="#module-resttest3.contenthandling" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="resttest3.contenthandling.ContentHandler">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.contenthandling.</code><code class="sig-name descname">ContentHandler</code><a class="reference internal" href="_modules/resttest3/contenthandling.html#ContentHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.contenthandling.ContentHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Handles content that may be (lazily) read from filesystem and/or templated to various degrees
+Also creates pixie dust and unicorn farts on demand
+This is pulled out because logic gets complex rather fast</p>
+<dl class="simple">
+<dt>Covers 6 states:</dt><dd><ul class="simple">
+<li><p>Inline body content, no templating</p></li>
+<li><p>Inline body content, with templating</p></li>
+<li><p>File path to content, NO templating</p></li>
+<li><p>File path to content, content gets templated</p></li>
+<li><p>Templated path to file content (path itself is templated), file content UNtemplated</p></li>
+<li><p>Templated path to file content (path itself is templated), file content TEMPLATED</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="resttest3.contenthandling.ContentHandler.content">
+<code class="sig-name descname">content</code><em class="property"> = None</em><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.content" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.contenthandling.ContentHandler.create_noread_version">
+<code class="sig-name descname">create_noread_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/contenthandling.html#ContentHandler.create_noread_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.create_noread_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read file content if it is static and return content handler with no I/O</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.contenthandling.ContentHandler.get_content">
+<code class="sig-name descname">get_content</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/contenthandling.html#ContentHandler.get_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.get_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does all context binding and pathing to get content, templated out</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.contenthandling.ContentHandler.is_dynamic">
+<code class="sig-name descname">is_dynamic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/contenthandling.html#ContentHandler.is_dynamic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.is_dynamic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is templating used?</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.contenthandling.ContentHandler.is_file">
+<code class="sig-name descname">is_file</code><em class="property"> = False</em><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.is_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.contenthandling.ContentHandler.is_template_content">
+<code class="sig-name descname">is_template_content</code><em class="property"> = False</em><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.is_template_content" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.contenthandling.ContentHandler.is_template_path">
+<code class="sig-name descname">is_template_path</code><em class="property"> = False</em><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.is_template_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.contenthandling.ContentHandler.parse_content">
+<em class="property">static </em><code class="sig-name descname">parse_content</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/contenthandling.html#ContentHandler.parse_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.parse_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse content from input node and returns ContentHandler object
+it’ll look like:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>template:</dt><dd><ul>
+<li><dl class="simple">
+<dt>file:</dt><dd><ul>
+<li><p>temple: path</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>or something</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.contenthandling.ContentHandler.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em>, <em class="sig-param"><span class="n">is_file</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">is_template_path</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">is_template_content</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/contenthandling.html#ContentHandler.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.contenthandling.ContentHandler.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Self explanatory, input is inline content or file path.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.exception">
+<span id="resttest3-exception-module"></span><h2>resttest3.exception module<a class="headerlink" href="#module-resttest3.exception" title="Permalink to this headline">¶</a></h2>
+<dl class="py exception">
+<dt id="resttest3.exception.BindError">
+<em class="property">exception </em><code class="sig-prename descclassname">resttest3.exception.</code><code class="sig-name descname">BindError</code><a class="reference internal" href="_modules/resttest3/exception.html#BindError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.exception.BindError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="resttest3.exception.HttpMethodError">
+<em class="property">exception </em><code class="sig-prename descclassname">resttest3.exception.</code><code class="sig-name descname">HttpMethodError</code><a class="reference internal" href="_modules/resttest3/exception.html#HttpMethodError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.exception.HttpMethodError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="resttest3.exception.ValidatorError">
+<em class="property">exception </em><code class="sig-prename descclassname">resttest3.exception.</code><code class="sig-name descname">ValidatorError</code><a class="reference internal" href="_modules/resttest3/exception.html#ValidatorError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.exception.ValidatorError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.generators">
+<span id="resttest3-generators-module"></span><h2>resttest3.generators module<a class="headerlink" href="#module-resttest3.generators" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="resttest3.generators.factory_choice_generator">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">factory_choice_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#factory_choice_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.factory_choice_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a generator that picks values from a list randomly</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.factory_env_string">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">factory_env_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#factory_env_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.factory_env_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a generator function that uses OS expand path to expand environment variables in string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.factory_env_variable">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">factory_env_variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env_variable</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#factory_env_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.factory_env_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a generator function that reads from an environment variable</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.factory_fixed_sequence">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">factory_fixed_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#factory_fixed_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.factory_fixed_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a generator that runs through a list of values in order, looping after end</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.factory_generate_ids">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">factory_generate_ids</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">starting_id</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">increment</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#factory_generate_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.factory_generate_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return function generator for ids starting at starting_id
+Note: needs to be called with () to make generator</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.factory_generate_text">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">factory_generate_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">legal_characters</span><span class="o">=</span><span class="default_value">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></em>, <em class="sig-param"><span class="n">min_length</span><span class="o">=</span><span class="default_value">8</span></em>, <em class="sig-param"><span class="n">max_length</span><span class="o">=</span><span class="default_value">8</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#factory_generate_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.factory_generate_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator function for text with given legal_characters string and length
+Default is ascii letters, length 8</p>
+<p>For hex digits, combine with string.hexstring, etc</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.generator_basic_ids">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">generator_basic_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#generator_basic_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.generator_basic_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return ids generator starting at 1</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.generator_random_int32">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">generator_random_int32</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#generator_random_int32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.generator_random_int32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Random integer generator for up to 32-bit signed ints</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.parse_choice_generator">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">parse_choice_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#parse_choice_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.parse_choice_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse choice generator</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.parse_fixed_sequence">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">parse_fixed_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#parse_fixed_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.parse_fixed_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse fixed sequence string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.parse_generator">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">parse_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configuration</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#parse_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.parse_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a configuration built from yaml and returns a generator
+Configuration should be a map</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.parse_random_text_generator">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">parse_random_text_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configuration</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#parse_random_text_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.parse_random_text_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses configuration options for a random text generator</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.generators.register_generator">
+<code class="sig-prename descclassname">resttest3.generators.</code><code class="sig-name descname">register_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">typename</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">parse_function</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/generators.html#register_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.generators.register_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new generator for use in testing
+typename is the new generator type name (must not already exist)
+parse_function will parse a configuration object (dict)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.runner">
+<span id="resttest3-runner-module"></span><h2>resttest3.runner module<a class="headerlink" href="#module-resttest3.runner" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="resttest3.runner.ArgsRunner">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.runner.</code><code class="sig-name descname">ArgsRunner</code><a class="reference internal" href="_modules/resttest3/runner.html#ArgsRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.runner.ArgsRunner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="resttest3.runner.ArgsRunner.args">
+<code class="sig-name descname">args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/runner.html#ArgsRunner.args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.runner.ArgsRunner.args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.runner.Runner">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.runner.</code><code class="sig-name descname">Runner</code><a class="reference internal" href="_modules/resttest3/runner.html#Runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.runner.Runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="resttest3.runner.Runner.FAIL">
+<code class="sig-name descname">FAIL</code><em class="property"> = '\x1b[91m'</em><a class="headerlink" href="#resttest3.runner.Runner.FAIL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.runner.Runner.NOCOL">
+<code class="sig-name descname">NOCOL</code><em class="property"> = '\x1b[0m'</em><a class="headerlink" href="#resttest3.runner.Runner.NOCOL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.runner.Runner.SUCCESS">
+<code class="sig-name descname">SUCCESS</code><em class="property"> = '\x1b[92m'</em><a class="headerlink" href="#resttest3.runner.Runner.SUCCESS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.runner.Runner.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/resttest3/runner.html#Runner.main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.runner.Runner.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.runner.Runner.read_test_file">
+<em class="property">static </em><code class="sig-name descname">read_test_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_location</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>Dict<span class="p">]</span><a class="reference internal" href="_modules/resttest3/runner.html#Runner.read_test_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.runner.Runner.read_test_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.runner.main">
+<code class="sig-prename descclassname">resttest3.runner.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/runner.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.runner.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.testcase">
+<span id="resttest3-testcase-module"></span><h2>resttest3.testcase module<a class="headerlink" href="#module-resttest3.testcase" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="resttest3.testcase.TestCase">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.testcase.</code><code class="sig-name descname">TestCase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base_url</span></em>, <em class="sig-param"><span class="n">extract_binds</span></em>, <em class="sig-param"><span class="n">variable_binds</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">config</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="resttest3.testcase.TestCase.DEFAULT_NAME">
+<code class="sig-name descname">DEFAULT_NAME</code><em class="property"> = 'NO NAME'</em><a class="headerlink" href="#resttest3.testcase.TestCase.DEFAULT_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.testcase.TestCase.KEYWORD_DICT">
+<code class="sig-name descname">KEYWORD_DICT</code><em class="property"> = {'absolute_urls': 'absolute-url', 'auth_password': 'auth_password', 'auth_username': 'auth_username', 'body': 'body', 'delay': 'delay', 'expected_status': 'expected_status', 'extract_binds': 'extract_binds', 'generator_binds': 'generator_binds', 'global_env': 'global_env', 'group': 'group', 'headers': 'headers', 'method': 'method', 'name': 'name', 'options': 'options', 'stop_on_failure': 'stop_on_failure', 'url': 'url', 'validators': 'validators', 'variable_binds': 'variable_binds'}</em><a class="headerlink" href="#resttest3.testcase.TestCase.KEYWORD_DICT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.auth_password">
+<em class="property">property </em><code class="sig-name descname">auth_password</code><a class="headerlink" href="#resttest3.testcase.TestCase.auth_password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.auth_username">
+<em class="property">property </em><code class="sig-name descname">auth_username</code><a class="headerlink" href="#resttest3.testcase.TestCase.auth_username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.body">
+<em class="property">property </em><code class="sig-name descname">body</code><a class="headerlink" href="#resttest3.testcase.TestCase.body" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.config">
+<em class="property">property </em><code class="sig-name descname">config</code><a class="headerlink" href="#resttest3.testcase.TestCase.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.delay">
+<em class="property">property </em><code class="sig-name descname">delay</code><a class="headerlink" href="#resttest3.testcase.TestCase.delay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.expected_http_status_code_list">
+<em class="property">property </em><code class="sig-name descname">expected_http_status_code_list</code><a class="headerlink" href="#resttest3.testcase.TestCase.expected_http_status_code_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.extract_binds">
+<em class="property">property </em><code class="sig-name descname">extract_binds</code><a class="headerlink" href="#resttest3.testcase.TestCase.extract_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.failures">
+<em class="property">property </em><code class="sig-name descname">failures</code><a class="headerlink" href="#resttest3.testcase.TestCase.failures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.generator_binds">
+<em class="property">property </em><code class="sig-name descname">generator_binds</code><a class="headerlink" href="#resttest3.testcase.TestCase.generator_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.group">
+<em class="property">property </em><code class="sig-name descname">group</code><a class="headerlink" href="#resttest3.testcase.TestCase.group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.headers">
+<em class="property">property </em><code class="sig-name descname">headers</code><a class="headerlink" href="#resttest3.testcase.TestCase.headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.http_method">
+<em class="property">property </em><code class="sig-name descname">http_method</code><a class="headerlink" href="#resttest3.testcase.TestCase.http_method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.is_dynamic">
+<code class="sig-name descname">is_dynamic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.is_dynamic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.is_dynamic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.is_passed">
+<em class="property">property </em><code class="sig-name descname">is_passed</code><a class="headerlink" href="#resttest3.testcase.TestCase.is_passed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#resttest3.testcase.TestCase.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.parse">
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">testcase_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.post_update">
+<code class="sig-name descname">post_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.post_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.post_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.pre_update">
+<code class="sig-name descname">pre_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.pre_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.pre_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.realize_template">
+<code class="sig-name descname">realize_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variable_name</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.realize_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.realize_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">curl_handler</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.set_template">
+<code class="sig-name descname">set_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variable_name</span></em>, <em class="sig-param"><span class="n">template_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCase.set_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCase.set_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.url">
+<em class="property">property </em><code class="sig-name descname">url</code><a class="headerlink" href="#resttest3.testcase.TestCase.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.validators">
+<em class="property">property </em><code class="sig-name descname">validators</code><a class="headerlink" href="#resttest3.testcase.TestCase.validators" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCase.variable_binds">
+<em class="property">property </em><code class="sig-name descname">variable_binds</code><a class="headerlink" href="#resttest3.testcase.TestCase.variable_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.testcase.TestCaseConfig">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.testcase.</code><code class="sig-name descname">TestCaseConfig</code><a class="reference internal" href="_modules/resttest3/testcase.html#TestCaseConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCaseConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Global configuration for a testset.</p>
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseConfig.parse">
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCaseConfig.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCaseConfig.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseConfig.variable_binds">
+<em class="property">property </em><code class="sig-name descname">variable_binds</code><a class="headerlink" href="#resttest3.testcase.TestCaseConfig.variable_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.testcase.TestCaseGroup">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.testcase.</code><code class="sig-name descname">TestCaseGroup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extract_binds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">variable_binds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">config</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestCaseGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestCaseGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="resttest3.testcase.TestCaseGroup.DEFAULT_GROUP">
+<code class="sig-name descname">DEFAULT_GROUP</code><em class="property"> = 'NO GROUP'</em><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.DEFAULT_GROUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseGroup.benchmark_list">
+<em class="property">property </em><code class="sig-name descname">benchmark_list</code><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.benchmark_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseGroup.config">
+<em class="property">property </em><code class="sig-name descname">config</code><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseGroup.context">
+<em class="property">property </em><code class="sig-name descname">context</code><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseGroup.extract_binds">
+<em class="property">property </em><code class="sig-name descname">extract_binds</code><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.extract_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseGroup.is_global">
+<em class="property">property </em><code class="sig-name descname">is_global</code><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.is_global" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseGroup.testcase_list">
+<em class="property">property </em><code class="sig-name descname">testcase_list</code><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.testcase_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestCaseGroup.variable_binds">
+<em class="property">property </em><code class="sig-name descname">variable_binds</code><a class="headerlink" href="#resttest3.testcase.TestCaseGroup.variable_binds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.testcase.TestResult">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.testcase.</code><code class="sig-name descname">TestResult</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span></em>, <em class="sig-param"><span class="n">status_code</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="resttest3.testcase.TestResult.failures">
+<em class="property">property </em><code class="sig-name descname">failures</code><a class="headerlink" href="#resttest3.testcase.TestResult.failures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestResult.headers">
+<em class="property">property </em><code class="sig-name descname">headers</code><a class="headerlink" href="#resttest3.testcase.TestResult.headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.testcase.TestSet">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.testcase.</code><code class="sig-name descname">TestSet</code><a class="reference internal" href="_modules/resttest3/testcase.html#TestSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="resttest3.testcase.TestSet.parse">
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base_url</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">testcase_list</span><span class="p">:</span> <span class="n">List</span></em>, <em class="sig-param"><span class="n">test_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">working_directory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">variable_dict</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestSet.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestSet.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.testcase.TestSet.parse_test">
+<em class="property">static </em><code class="sig-name descname">parse_test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base_url</span></em>, <em class="sig-param"><span class="n">sub_testcase_node</span></em>, <em class="sig-param"><span class="n">testcase_config_object</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/testcase.html#TestSet.parse_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.testcase.TestSet.parse_test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="resttest3.testcase.TestSet.test_group_list_dict">
+<code class="sig-name descname">test_group_list_dict</code><em class="property"> = {}</em><a class="headerlink" href="#resttest3.testcase.TestSet.test_group_list_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.utils">
+<span id="resttest3-utils-module"></span><h2>resttest3.utils module<a class="headerlink" href="#module-resttest3.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="resttest3.utils.ChangeDir">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.utils.</code><code class="sig-name descname">ChangeDir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#ChangeDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.ChangeDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Context manager for changing the current working directory</p>
+<dl class="py attribute">
+<dt id="resttest3.utils.ChangeDir.DIR_LOCK">
+<code class="sig-name descname">DIR_LOCK</code><em class="property"> = &lt;unlocked _thread.RLock object owner=0 count=0&gt;</em><a class="headerlink" href="#resttest3.utils.ChangeDir.DIR_LOCK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.utils.Parser">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.utils.</code><code class="sig-name descname">Parser</code><a class="reference internal" href="_modules/resttest3/utils.html#Parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="resttest3.utils.Parser.coerce_http_method">
+<em class="property">static </em><code class="sig-name descname">coerce_http_method</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.coerce_http_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.coerce_http_method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.coerce_list_of_ints">
+<em class="property">static </em><code class="sig-name descname">coerce_list_of_ints</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.coerce_list_of_ints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.coerce_list_of_ints" title="Permalink to this definition">¶</a></dt>
+<dd><p>If single value, try to parse as integer, else try to parse as list of integer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.coerce_string_to_ascii">
+<em class="property">static </em><code class="sig-name descname">coerce_string_to_ascii</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.coerce_string_to_ascii"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.coerce_string_to_ascii" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.coerce_to_string">
+<em class="property">static </em><code class="sig-name descname">coerce_to_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.coerce_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.coerce_to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.encode_unicode_bytes">
+<em class="property">static </em><code class="sig-name descname">encode_unicode_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">my_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.encode_unicode_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.encode_unicode_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shim function, converts Unicode to UTF-8 encoded bytes regardless of the source format
+Intended for python 3 compatibility mode, and b/c PyCurl only takes raw bytes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.flatten_dictionaries">
+<em class="property">static </em><code class="sig-name descname">flatten_dictionaries</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_dict</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Dict<span class="p">, </span>List<span class="p">[</span>Dict<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.flatten_dictionaries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.flatten_dictionaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flatten a list of dictionaries into a single dictionary, to allow flexible YAML use
+Dictionary comprehensions can do this, but would like to allow for pre-Python 2.7 use
+If input isn’t a list, just return it….</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.flatten_lowercase_keys_dict">
+<em class="property">static </em><code class="sig-name descname">flatten_lowercase_keys_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_dict</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.flatten_lowercase_keys_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.flatten_lowercase_keys_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take input and if a dictionary, return version with keys all lowercase and cast to str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.lowercase_keys">
+<em class="property">static </em><code class="sig-name descname">lowercase_keys</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.lowercase_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.lowercase_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take input and if a dictionary, return version with keys all lowercase and cast to str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.parse_headers">
+<em class="property">static </em><code class="sig-name descname">parse_headers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">header_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.parse_headers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.parse_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a header-string into individual headers
+Implementation based on: <a class="reference external" href="http://stackoverflow.com/a/5955949/95122">http://stackoverflow.com/a/5955949/95122</a>
+Note that headers are a list of (key, value) since duplicate headers are allowed
+NEW NOTE: keys &amp; values are unicode strings, but can only contain ISO-8859-1 characters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.safe_substitute_unicode_template">
+<em class="property">static </em><code class="sig-name descname">safe_substitute_unicode_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">templated_string</span></em>, <em class="sig-param"><span class="n">variable_map</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.safe_substitute_unicode_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.safe_substitute_unicode_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform string.Template safe_substitute on unicode input with unicode variable values by using escapes
+Catch: cannot accept unicode variable names, just values
+Returns a Unicode type output, if you want UTF-8 bytes, do encode_unicode_bytes on it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.safe_to_bool">
+<em class="property">static </em><code class="sig-name descname">safe_to_bool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.safe_to_bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.safe_to_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safely convert user input to a boolean, throwing exception if not boolean or boolean-appropriate string
+For flexibility, we allow case insensitive string matching to false/true values
+If it’s not a boolean or string that matches ‘false’ or ‘true’ when ignoring case, throws an exception</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.utils.Parser.safe_to_json">
+<em class="property">static </em><code class="sig-name descname">safe_to_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_obj</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#Parser.safe_to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.Parser.safe_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safely get dict from object if present for json dumping</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.utils.read_testcase_file">
+<code class="sig-prename descclassname">resttest3.utils.</code><code class="sig-name descname">read_testcase_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#read_testcase_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.read_testcase_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.utils.register_extensions">
+<code class="sig-prename descclassname">resttest3.utils.</code><code class="sig-name descname">register_extensions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">modules</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/utils.html#register_extensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.utils.register_extensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import the modules and register their respective extensions</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-resttest3.validators">
+<span id="resttest3-validators-module"></span><h2>resttest3.validators module<a class="headerlink" href="#module-resttest3.validators" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="resttest3.validators.AbstractExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">AbstractExtractor</code><a class="reference internal" href="_modules/resttest3/validators.html#AbstractExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic extractor, you only need to implement full_extract</p>
+<dl class="py method">
+<dt id="resttest3.validators.AbstractExtractor.configure_base">
+<em class="property">classmethod </em><code class="sig-name descname">configure_base</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">extractor_base</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#AbstractExtractor.configure_base"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractExtractor.configure_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse config object and do basic config on an Extractor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.AbstractExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#AbstractExtractor.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.AbstractExtractor.extract_internal">
+<em class="property">abstract </em><code class="sig-name descname">extract_internal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#AbstractExtractor.extract_internal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractExtractor.extract_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do extraction, query should be pre-templated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.AbstractExtractor.get_readable_config">
+<code class="sig-name descname">get_readable_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#AbstractExtractor.get_readable_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractExtractor.get_readable_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a human-readable version of the configuration</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.AbstractExtractor.is_body_extractor">
+<em class="property">property </em><code class="sig-name descname">is_body_extractor</code><a class="headerlink" href="#resttest3.validators.AbstractExtractor.is_body_extractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.AbstractExtractor.is_templated">
+<em class="property">property </em><code class="sig-name descname">is_templated</code><a class="headerlink" href="#resttest3.validators.AbstractExtractor.is_templated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.AbstractExtractor.templated_query">
+<code class="sig-name descname">templated_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#AbstractExtractor.templated_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractExtractor.templated_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.validators.AbstractValidator">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">AbstractValidator</code><a class="reference internal" href="_modules/resttest3/validators.html#AbstractValidator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Encapsulates basic validator handling</p>
+<dl class="py method">
+<dt id="resttest3.validators.AbstractValidator.validate">
+<em class="property">abstract </em><code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#AbstractValidator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.AbstractValidator.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the validation function, return true or a Failure</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.validators.ComparatorValidator">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">ComparatorValidator</code><a class="reference internal" href="_modules/resttest3/validators.html#ComparatorValidator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ComparatorValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#resttest3.validators.AbstractValidator" title="resttest3.validators.AbstractValidator"><code class="xref py py-class docutils literal notranslate"><span class="pre">resttest3.validators.AbstractValidator</span></code></a></p>
+<p>Does extract and compare from request body</p>
+<dl class="py method">
+<dt id="resttest3.validators.ComparatorValidator.get_readable_config">
+<code class="sig-name descname">get_readable_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#ComparatorValidator.get_readable_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ComparatorValidator.get_readable_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a human-readable config string</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.ComparatorValidator.parse">
+<em class="property">static </em><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#ComparatorValidator.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ComparatorValidator.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a validator that does an extract from body and applies a comparator,
+Then does comparison vs expected value
+Syntax sample:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>{ jsonpath_mini: ‘node.child’,</dt><dd><p>operator: ‘eq’,
+expected: ‘myValue’</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.ComparatorValidator.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#ComparatorValidator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ComparatorValidator.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the validation function, return true or a Failure</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.validators.ExtractTestValidator">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">ExtractTestValidator</code><a class="reference internal" href="_modules/resttest3/validators.html#ExtractTestValidator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ExtractTestValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#resttest3.validators.AbstractValidator" title="resttest3.validators.AbstractValidator"><code class="xref py py-class docutils literal notranslate"><span class="pre">resttest3.validators.AbstractValidator</span></code></a></p>
+<p>Does extract and test from request body</p>
+<dl class="py method">
+<dt id="resttest3.validators.ExtractTestValidator.get_readable_config">
+<code class="sig-name descname">get_readable_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#ExtractTestValidator.get_readable_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ExtractTestValidator.get_readable_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a human-readable config string</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.ExtractTestValidator.parse">
+<em class="property">static </em><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#ExtractTestValidator.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ExtractTestValidator.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.ExtractTestValidator.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#ExtractTestValidator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.ExtractTestValidator.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the validation function, return true or a Failure</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.validators.Failure">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">Failure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">details</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">failure_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">validator</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#Failure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.Failure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.validators.HeaderExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">HeaderExtractor</code><a class="reference internal" href="_modules/resttest3/validators.html#HeaderExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.HeaderExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#resttest3.validators.AbstractExtractor" title="resttest3.validators.AbstractExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">resttest3.validators.AbstractExtractor</span></code></a></p>
+<p>Extractor that pulls out a named header value… or list of values if multiple values defined</p>
+<dl class="py method">
+<dt id="resttest3.validators.HeaderExtractor.extract_internal">
+<code class="sig-name descname">extract_internal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#HeaderExtractor.extract_internal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.HeaderExtractor.extract_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do extraction, query should be pre-templated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.HeaderExtractor.parse">
+<em class="property">classmethod </em><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#HeaderExtractor.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.HeaderExtractor.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.validators.MiniJsonExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">MiniJsonExtractor</code><a class="reference internal" href="_modules/resttest3/validators.html#MiniJsonExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.MiniJsonExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#resttest3.validators.AbstractExtractor" title="resttest3.validators.AbstractExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">resttest3.validators.AbstractExtractor</span></code></a></p>
+<p>Extractor that uses jsonpath_mini syntax
+IE key.key or array_index.key extraction</p>
+<dl class="py method">
+<dt id="resttest3.validators.MiniJsonExtractor.extract_internal">
+<code class="sig-name descname">extract_internal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#MiniJsonExtractor.extract_internal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.MiniJsonExtractor.extract_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do extraction, query should be pre-templated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.MiniJsonExtractor.parse">
+<em class="property">classmethod </em><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#MiniJsonExtractor.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.MiniJsonExtractor.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.MiniJsonExtractor.query_dictionary">
+<em class="property">static </em><code class="sig-name descname">query_dictionary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">dictionary</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">, </span>Dict<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">delimiter</span><span class="o">=</span><span class="default_value">'.'</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>Dict<span class="p">]</span><a class="reference internal" href="_modules/resttest3/validators.html#MiniJsonExtractor.query_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.MiniJsonExtractor.query_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do an xpath-like query with dictionary, using a template if relevant</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="resttest3.validators.RawBodyExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">RawBodyExtractor</code><a class="reference internal" href="_modules/resttest3/validators.html#RawBodyExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.RawBodyExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#resttest3.validators.AbstractExtractor" title="resttest3.validators.AbstractExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">resttest3.validators.AbstractExtractor</span></code></a></p>
+<p>Extractor that returns the full request body</p>
+<dl class="py method">
+<dt id="resttest3.validators.RawBodyExtractor.extract_internal">
+<code class="sig-name descname">extract_internal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">headers</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#RawBodyExtractor.extract_internal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.RawBodyExtractor.extract_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do extraction, query should be pre-templated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="resttest3.validators.RawBodyExtractor.parse">
+<em class="property">classmethod </em><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#RawBodyExtractor.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.RawBodyExtractor.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.validators.parse_extractor">
+<code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">parse_extractor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">extractor_type</span></em>, <em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#parse_extractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.parse_extractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert extractor type and config to an extractor instance
+Uses registered parse function for that extractor type
+Parse functions may return either:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>An extraction function (wrapped in an Extractor instance with configs and returned)</p></li>
+<li><p>OR a a full Extractor instance (configured)</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.validators.parse_validator">
+<code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">parse_validator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">config_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#parse_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.parse_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a validator from configuration and use it</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.validators.register_comparator">
+<code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">register_comparator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">comparator_name</span></em>, <em class="sig-param"><span class="n">comparator_function</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#register_comparator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.register_comparator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new twpo-argument comparator function returning true or false</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.validators.register_extractor">
+<code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">register_extractor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">extractor_name</span></em>, <em class="sig-param"><span class="n">parse_function</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#register_extractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.register_extractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new body extraction function</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.validators.register_test">
+<code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">register_test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">test_name</span></em>, <em class="sig-param"><span class="n">test_function</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#register_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.register_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new one-argument test function</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="resttest3.validators.register_validator">
+<code class="sig-prename descclassname">resttest3.validators.</code><code class="sig-name descname">register_validator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">parse_function</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/resttest3/validators.html#register_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#resttest3.validators.register_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a validator for use by this library
+Name is the string name for validator</p>
+<p>Parse function does parse(config_node) and returns a Validator object
+Validator functions have signature:</p>
+<blockquote>
+<div><p>validate(response_body, context=None) - context is a bindings.Context object</p>
+</div></blockquote>
+<p>Validators return true or false and optionally can return a Failure instead of false
+This allows for passing more details</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-resttest3">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-resttest3" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Abhilash Joseph C
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

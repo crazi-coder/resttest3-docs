@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>resttest3.utils &mdash; API Testing Tool (resttest3) v1.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> API Testing Tool (resttest3)
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">WrokFlow</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">API Testing Tool (resttest3)</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>resttest3.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for resttest3.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">email</span> <span class="kn">import</span> <span class="n">message_from_string</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">from</span> <span class="nn">resttest3.generators</span> <span class="kn">import</span> <span class="n">register_generator</span>
+<span class="kn">from</span> <span class="nn">resttest3.validators</span> <span class="kn">import</span> <span class="n">register_test</span><span class="p">,</span> <span class="n">register_comparator</span><span class="p">,</span> <span class="n">register_extractor</span>
+<span class="kn">from</span> <span class="nn">resttest3.validators</span> <span class="kn">import</span> <span class="n">register_validator</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;resttest3&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ChangeDir"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.ChangeDir">[docs]</a><span class="k">class</span> <span class="nc">ChangeDir</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Context manager for changing the current working directory&quot;&quot;&quot;</span>
+    <span class="n">DIR_LOCK</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>  <span class="c1"># Guards operations changing the working directory</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">:</span>  <span class="c1"># Don&#39;t CD to nothingness</span>
+            <span class="n">ChangeDir</span><span class="o">.</span><span class="n">DIR_LOCK</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">:</span>  <span class="c1"># Don&#39;t CD to nothingness</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span><span class="p">)</span>
+            <span class="n">ChangeDir</span><span class="o">.</span><span class="n">DIR_LOCK</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="read_testcase_file"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.read_testcase_file">[docs]</a><span class="k">def</span> <span class="nf">read_testcase_file</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">testcase</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">testcase</span></div>
+
+
+<div class="viewcode-block" id="Parser"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser">[docs]</a><span class="k">class</span> <span class="nc">Parser</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Parser.encode_unicode_bytes"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.encode_unicode_bytes">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">encode_unicode_bytes</span><span class="p">(</span><span class="n">my_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Shim function, converts Unicode to UTF-8 encoded bytes regardless of the source format</span>
+<span class="sd">            Intended for python 3 compatibility mode, and b/c PyCurl only takes raw bytes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">my_string</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytearray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">my_string</span>
+
+        <span class="n">my_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">my_string</span><span class="p">)</span>
+        <span class="n">my_string</span> <span class="o">=</span> <span class="n">my_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">my_string</span></div>
+
+<div class="viewcode-block" id="Parser.safe_substitute_unicode_template"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.safe_substitute_unicode_template">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">safe_substitute_unicode_template</span><span class="p">(</span><span class="n">templated_string</span><span class="p">,</span> <span class="n">variable_map</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Perform string.Template safe_substitute on unicode input with unicode variable values by using escapes</span>
+<span class="sd">            Catch: cannot accept unicode variable names, just values</span>
+<span class="sd">            Returns a Unicode type output, if you want UTF-8 bytes, do encode_unicode_bytes on it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">templated_string</span><span class="p">)</span><span class="o">.</span><span class="n">safe_substitute</span><span class="p">(</span><span class="n">variable_map</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Parser.safe_to_json"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.safe_to_json">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">safe_to_json</span><span class="p">(</span><span class="n">in_obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Safely get dict from object if present for json dumping &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_obj</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">in_obj</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">in_obj</span><span class="p">,</span> <span class="s1">&#39;__dict__&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)}</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">in_obj</span>
+
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">in_obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Parser.flatten_dictionaries"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.flatten_dictionaries">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">flatten_dictionaries</span><span class="p">(</span><span class="n">input_dict</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]):</span>
+        <span class="sd">&quot;&quot;&quot; Flatten a list of dictionaries into a single dictionary, to allow flexible YAML use</span>
+<span class="sd">          Dictionary comprehensions can do this, but would like to allow for pre-Python 2.7 use</span>
+<span class="sd">          If input isn&#39;t a list, just return it.... &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="ow">or</span> <span class="n">d</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">input_dict</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="Parser.lowercase_keys"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.lowercase_keys">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">lowercase_keys</span><span class="p">(</span><span class="n">input_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Take input and if a dictionary, return version with keys all lowercase and cast to str &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">input_dict</span>
+        <span class="k">return</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">input_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+<div class="viewcode-block" id="Parser.flatten_lowercase_keys_dict"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.flatten_lowercase_keys_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">flatten_lowercase_keys_dict</span><span class="p">(</span><span class="n">input_dict</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Take input and if a dictionary, return version with keys all lowercase and cast to str &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">output_dict</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">flatten_dictionaries</span><span class="p">(</span><span class="n">input_dict</span><span class="p">)</span>
+            <span class="n">output_dict</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">lowercase_keys</span><span class="p">(</span><span class="n">output_dict</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">input_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_dict</span> <span class="o">=</span> <span class="n">Parser</span><span class="o">.</span><span class="n">lowercase_keys</span><span class="p">(</span><span class="n">input_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output_dict</span></div>
+
+<div class="viewcode-block" id="Parser.safe_to_bool"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.safe_to_bool">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">safe_to_bool</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Safely convert user input to a boolean, throwing exception if not boolean or boolean-appropriate string</span>
+<span class="sd">          For flexibility, we allow case insensitive string matching to false/true values</span>
+<span class="sd">          If it&#39;s not a boolean or string that matches &#39;false&#39; or &#39;true&#39; when ignoring case, throws an exception &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;false&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Input Object is not a boolean or string form of boolean!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Parser.coerce_to_string"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.coerce_to_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">coerce_to_string</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">val</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input </span><span class="si">{0}</span><span class="s2"> is not a string or integer, and it needs to be!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Parser.coerce_string_to_ascii"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.coerce_string_to_ascii">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">coerce_string_to_ascii</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input </span><span class="si">{0}</span><span class="s2"> is not a string, string expected&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Parser.coerce_http_method"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.coerce_http_method">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">coerce_http_method</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid HTTP method name: input </span><span class="si">{0}</span><span class="s2"> is not a string or has 0 length&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Parser.coerce_list_of_ints"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.coerce_list_of_ints">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">coerce_list_of_ints</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; If single value, try to parse as integer, else try to parse as list of integer &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">val</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="Parser.parse_headers"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.Parser.parse_headers">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_headers</span><span class="p">(</span><span class="n">header_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Parse a header-string into individual headers</span>
+<span class="sd">            Implementation based on: http://stackoverflow.com/a/5955949/95122</span>
+<span class="sd">            Note that headers are a list of (key, value) since duplicate headers are allowed</span>
+<span class="sd">            NEW NOTE: keys &amp; values are unicode strings, but can only contain ISO-8859-1 characters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">header_string</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">header_string</span> <span class="o">=</span> <span class="n">header_string</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="c1"># First line is request line, strip it out</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">header_string</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">request</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">header_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">headers</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="n">header_msg</span> <span class="o">=</span> <span class="n">message_from_string</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+        <span class="c1"># Note: HTTP headers are *case-insensitive* per RFC 2616</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">header_msg</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span></div></div>
+
+<div class="viewcode-block" id="register_extensions"><a class="viewcode-back" href="../../resttest3.html#resttest3.utils.register_extensions">[docs]</a><span class="k">def</span> <span class="nf">register_extensions</span><span class="p">(</span><span class="n">modules</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import the modules and register their respective extensions &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># Catch supplying just a string arg</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">modules</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+        <span class="c1"># Get the package prefix and final module name</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">segments</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span>
+        <span class="c1"># Necessary to get the root module back</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span> <span class="nb">locals</span><span class="p">(),</span> <span class="n">package</span><span class="p">)</span>
+
+        <span class="c1"># Extensions are registered by applying a register function to sets of</span>
+        <span class="c1"># registry name/function pairs inside an object</span>
+        <span class="n">extension_applies</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;VALIDATORS&#39;</span><span class="p">:</span> <span class="n">register_validator</span><span class="p">,</span>
+            <span class="s1">&#39;COMPARATORS&#39;</span><span class="p">:</span> <span class="n">register_comparator</span><span class="p">,</span>
+            <span class="s1">&#39;VALIDATOR_TESTS&#39;</span><span class="p">:</span> <span class="n">register_test</span><span class="p">,</span>
+            <span class="s1">&#39;EXTRACTORS&#39;</span><span class="p">:</span> <span class="n">register_extractor</span><span class="p">,</span>
+            <span class="s1">&#39;GENERATORS&#39;</span><span class="p">:</span> <span class="n">register_generator</span>
+        <span class="p">}</span>
+
+        <span class="n">has_registry</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">registry_name</span><span class="p">,</span> <span class="n">register_function</span> <span class="ow">in</span> <span class="n">extension_applies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">registry_name</span><span class="p">):</span>
+                <span class="n">registry</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">registry_name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">register_function</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">registry</span><span class="p">:</span>
+                    <span class="n">has_registry</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_registry</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;Extension to register did not contain any registries: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ext</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Abhilash Joseph C
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>resttest3.binding &mdash; API Testing Tool (resttest3) v1.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> API Testing Tool (resttest3)
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">WrokFlow</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">API Testing Tool (resttest3)</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>resttest3.binding</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for resttest3.binding</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">types</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Basic context implementation for binding variables to values</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;resttest3&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context">[docs]</a><span class="k">class</span> <span class="nc">Context</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Manages binding of variables &amp; generators, with both variable name and generator name being strings &quot;&quot;&quot;</span>
+
+    <span class="c1"># variables = {}</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Maps variable name to current value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generators</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Maps generator name to generator function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mod_count</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Lets us see if something has been altered, avoiding needless retemplating</span>
+
+<div class="viewcode-block" id="Context.bind_variable"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.bind_variable">[docs]</a>    <span class="k">def</span> <span class="nf">bind_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">variable_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Bind a named variable to a value within the context</span>
+<span class="sd">            This allows for passing in variables in testing &quot;&quot;&quot;</span>
+        <span class="n">str_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">str_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">prev</span> <span class="o">!=</span> <span class="n">variable_value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">variable_value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mod_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mod_count</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Context: altered variable named </span><span class="si">{0}</span><span class="s1"> to value </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">str_name</span><span class="p">,</span> <span class="n">variable_value</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Context.bind_variables"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.bind_variables">[docs]</a>    <span class="k">def</span> <span class="nf">bind_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_map</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">variable_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bind_variable</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.add_generator"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.add_generator">[docs]</a>    <span class="k">def</span> <span class="nf">add_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator_name</span><span class="p">,</span> <span class="n">generator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a generator to the context, this can be used to set values for a variable</span>
+<span class="sd">            Once created, you can set values with the generator via bind_generator_next &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Cannot add generator named </span><span class="si">{0}</span><span class="s1">, it is not a generator type&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">generator_name</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">generator_name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">generator</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Context: Added generator named </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">generator_name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Context.bind_generator_next"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.bind_generator_next">[docs]</a>    <span class="k">def</span> <span class="nf">bind_generator_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">generator_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Binds the next value for generator_name to variable_name and return value used &quot;&quot;&quot;</span>
+        <span class="n">str_gen_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">generator_name</span><span class="p">)</span>
+        <span class="n">str_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">[</span><span class="n">str_gen_name</span><span class="p">])</span>
+
+        <span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">str_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prev</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">str_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mod_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mod_count</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s1">&#39;Context: Set variable named </span><span class="si">{0}</span><span class="s1"> to next value </span><span class="si">{1}</span><span class="s1"> from generator named </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable_name</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span>
+                                                                                                    <span class="n">generator_name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="Context.get_values"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span></div>
+
+<div class="viewcode-block" id="Context.get_value"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get bound variable value, or return none if not set &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">variable_name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Context.get_generators"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.get_generators">[docs]</a>    <span class="k">def</span> <span class="nf">get_generators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span></div>
+
+<div class="viewcode-block" id="Context.get_generator"><a class="viewcode-back" href="../../resttest3.html#resttest3.binding.Context.get_generator">[docs]</a>    <span class="k">def</span> <span class="nf">get_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">generator_name</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Abhilash Joseph C
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
