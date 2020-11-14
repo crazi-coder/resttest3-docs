@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Extractors &mdash; API Testing Tool (resttest3) v1.0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Validation" href="validators.html" />
+    <link rel="prev" title="Getting Started" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> API Testing Tool (resttest3)
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Extractors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#jsonpath-mini">jsonpath_mini</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jmespath">jmespath</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#header">header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#raw-body">raw_body</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="validators.html">Validation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">API Testing Tool (resttest3)</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Extractors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/extractors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="extractors">
+<h1>Extractors<a class="headerlink" href="#extractors" title="Permalink to this headline">¶</a></h1>
+<p>Extractors are query-based ways to extract some part of an HTTP response
+body for use.</p>
+<p>This can be used as part of a validator or to capture values to a
+context variable for later use.</p>
+<p>Current extractors are limited, but the functions are pluggable – it is
+very easy to add full JsonPath, regex matching, xpath, xquery, etc and
+use them in your testing.
+<strong>An extractor definition looks like this:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">extractor_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extractor_configuration</span>
+</pre></div>
+</div>
+<p>Extractor configuration may be a simple string query, a templated
+string, or a more complex object. It’s completely up to the extractor
+parsing function how to handle this.</p>
+<div class="section" id="jsonpath-mini">
+<h2>jsonpath_mini<a class="headerlink" href="#jsonpath-mini" title="Permalink to this headline">¶</a></h2>
+<p>The basic ‘jsonpath_mini’ extractor provides a very limited
+<a class="reference external" href="http://goessner.net/articles/JsonPath/">JsonPath</a>-like
+implementation to grab data from JSON, with no external library
+dependencies.</p>
+<p>The elements of this syntax are a list of keys or indexes, descending
+down a tree, seperated by periods. Numbers are assumed to be array
+indices.</p>
+<p>If you wish to return the whole object, you may use an empty “” query or
+“.” – this can be helpful for APIs returning an array of objects, where
+you want to count the number of objects returned (using countEq
+operator).</p>
+<p>Given this JSON:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;thing&quot;</span><span class="p">:{</span><span class="nt">&quot;foo&quot;</span><span class="p">:</span><span class="s2">&quot;bar&quot;</span><span class="p">},</span>
+    <span class="nt">&quot;link_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="nt">&quot;person&quot;</span><span class="p">:{</span>
+        <span class="nt">&quot;firstname&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;lastname&quot;</span><span class="p">:</span> <span class="s2">&quot;Smith&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;age&quot;</span><span class="p">:</span> <span class="mi">17</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This query: <code class="docutils literal notranslate"><span class="pre">person.lastname</span></code> will return: <code class="docutils literal notranslate"><span class="pre">Smith</span></code></p></li>
+<li><p>This query: <code class="docutils literal notranslate"><span class="pre">person.is_a_ninja</span></code> Will return: NOTHING (None object) – that key is not defined for person</p></li>
+<li><p>This query: <code class="docutils literal notranslate"><span class="pre">link_ids.1</span></code>  Will return: 2</p></li>
+<li><p>This query: <code class="docutils literal notranslate"><span class="pre">thing</span></code> Will return: <code class="docutils literal notranslate"><span class="pre">{&quot;foo&quot;:&quot;bar&quot;}</span></code></p></li>
+</ul>
+<p><em>Note that if you use this in templates it will appear as ``{‘foo’:
+‘bar’}`` because it is converted to a python dictionary.</em></p>
+<p>use it in other tests, you will need to extract the component elements
+individually.</p>
+<ul class="simple">
+<li><p>This query: ‘.’ Will return: the whole response (as a python object). This can be
+very useful if you want to do contains or count operations on it.</p></li>
+<li><p>This query: ‘thing.0’ Will return: None – trick question, ‘thing’ is not an array!</p></li>
+</ul>
+<p>Super simple, super basic, but it actually will cover a lot of useful
+cases.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">jsonpath_mini</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="nt">template</span><span class="p">:</span> <span class="nv">$keyname.age</span><span class="p p-Indicator">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If the context variable ‘keyname’ is set to ‘person’, this will
+return 17.</p></li>
+<li><p>If it is set to ‘thing’, then it will return nothing (because the
+‘thing’ object lacks an ‘age’ key)</p></li>
+</ul>
+</div>
+<div class="section" id="jmespath">
+<h2>jmespath<a class="headerlink" href="#jmespath" title="Permalink to this headline">¶</a></h2>
+<p>The ‘jmespath’ extractor provides fulll
+<a class="reference external" href="http://jmespath.org/">JMESPath</a> implementation to grab data from
+JSON and requires jmespath library to be available for import. Full
+range of JMESPath expressions is supported.</p>
+<p>Given this JSON:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="nt">&quot;test1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="nt">&quot;a&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="nt">&quot;b&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="nt">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;baz&quot;</span><span class="p">},</span>
+   <span class="nt">&quot;test2&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="nt">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;b&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;c&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;d&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}}}},</span>
+   <span class="nt">&quot;test3&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">],</span>
+   <span class="nt">&quot;test4&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;b&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;c&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="nt">&quot;d&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]},</span>
+            <span class="p">{</span><span class="nt">&quot;d&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]}</span>
+          <span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="p">},</span>
+   <span class="nt">&quot;test5&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+   <span class="nt">&quot;test6&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;people&quot;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="p">{</span><span class="nt">&quot;first&quot;</span><span class="p">:</span> <span class="s2">&quot;James&quot;</span><span class="p">,</span> <span class="nt">&quot;last&quot;</span><span class="p">:</span> <span class="s2">&quot;d&quot;</span><span class="p">},</span>
+         <span class="p">{</span><span class="nt">&quot;first&quot;</span><span class="p">:</span> <span class="s2">&quot;Jacob&quot;</span><span class="p">,</span> <span class="nt">&quot;last&quot;</span><span class="p">:</span> <span class="s2">&quot;e&quot;</span><span class="p">},</span>
+         <span class="p">{</span><span class="nt">&quot;first&quot;</span><span class="p">:</span> <span class="s2">&quot;Jayden&quot;</span><span class="p">,</span> <span class="nt">&quot;last&quot;</span><span class="p">:</span> <span class="s2">&quot;f&quot;</span><span class="p">},</span>
+         <span class="p">{</span><span class="nt">&quot;missing&quot;</span><span class="p">:</span> <span class="s2">&quot;different&quot;</span><span class="p">}</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;foo&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;bar&quot;</span><span class="p">:</span> <span class="s2">&quot;baz&quot;</span><span class="p">}</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;test7&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;ops&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="nt">&quot;functionA&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;numArgs&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+         <span class="nt">&quot;functionB&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;numArgs&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+         <span class="nt">&quot;functionC&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;variadic&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;test8&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;reservations&quot;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="p">{</span> <span class="nt">&quot;instances&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;stopped&quot;</span><span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
+         <span class="p">{</span> <span class="nt">&quot;instances&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;terminated&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;runnning&quot;</span><span class="p">}</span> <span class="p">]</span> <span class="p">}</span>
+      <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;test9&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]]</span> <span class="p">],</span>
+   <span class="nt">&quot;test10&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="nt">&quot;machines&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;stopped&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
+   <span class="nt">&quot;test11&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;people&quot;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="nt">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;hired&quot;</span><span class="p">:</span> <span class="s2">&quot;ooo&quot;</span><span class="p">}</span> <span class="p">},</span>
+         <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="nt">&quot;age&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;fired&quot;</span><span class="p">:</span> <span class="s2">&quot;ooo&quot;</span><span class="p">}</span> <span class="p">},</span>
+         <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="nt">&quot;age&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;hired&quot;</span><span class="p">:</span> <span class="s2">&quot;atwork&quot;</span><span class="p">}</span> <span class="p">}</span> <span class="p">]</span>
+   <span class="p">}</span> <span class="p">,</span>
+   <span class="nt">&quot;test12&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="nt">&quot;myarray&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span> <span class="s2">&quot;barfoo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;baz&quot;</span><span class="p">,</span> <span class="s2">&quot;barbaz&quot;</span><span class="p">,</span> <span class="s2">&quot;barfoobaz&quot;</span> <span class="p">]</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Query</p></th>
+<th class="head"><p>Output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'test1.a'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;foo&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test1.b'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;bar&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'test1.c'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;baz&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test2.a.b.c.d'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;value&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'test3[1]'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;b&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test4.a.b.c[0].d[1][0]'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'length(test5[0:5])'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test5[1:3]'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'[1,</span> <span class="pre">2]'</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'test5[::2]'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'[0,</span> <span class="pre">2,</span> <span class="pre">4,</span> <span class="pre">6,</span> <span class="pre">8]'</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test5[5:0:-1]'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'[5,</span> <span class="pre">4,</span> <span class="pre">3,</span> <span class="pre">2,</span> <span class="pre">1]'</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'test6.people[*].first'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;['James',</span> <span class="pre">'Jacob',</span> <span class="pre">'Jayden']&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test6.people[:2].first'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;['James',</span> <span class="pre">'Jacob']&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'test6.people[*].first</span> <span class="pre">|</span> <span class="pre">[0]'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'James'</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test7.ops.*.numArgs'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'[2,</span> <span class="pre">3]'</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'test8.reservations[*].instances[*].state'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;[['running',</span> <span class="pre">'stopped'],</span> <span class="pre">['terminated',</span> <span class="pre">'runnning']]&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'test9[]'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">[6,</span> <span class="pre">7]]'</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;test10.machines[?state=='running'].name&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;['a',</span> <span class="pre">'c']&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;test10.machines[?state!='running'][name,</span> <span class="pre">state]</span> <span class="pre">|</span> <span class="pre">[0]&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;['b',</span> <span class="pre">'stopped']&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'length(test11.people)'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'max_by(test11.people,</span> <span class="pre">&amp;age).name'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'a'</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;test12.myarray[?contains(&#64;,</span> <span class="pre">'foo')</span> <span class="pre">==</span> <span class="pre">`true`]&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;['foo',</span> <span class="pre">'foobar',</span> <span class="pre">'barfoo',</span> <span class="pre">'barfoobaz']&quot;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="header">
+<h2>header<a class="headerlink" href="#header" title="Permalink to this headline">¶</a></h2>
+<p>This extracts the value of an HTTP header from the response.
+This value can be tested with comparisons or extract tests.
+Note that <strong>headers are case-insensitive</strong>, ‘content-type’ and
+‘Content-Type’ will be the same. If multiple values are defined for the
+header, a list of values will be returned (example: cookies).</p>
+<p>Example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">compare</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="nt">header</span><span class="p">:</span> <span class="s">&#39;content-type&#39;</span><span class="p p-Indicator">,</span><span class="nt"> expected</span><span class="p">:</span> <span class="s">&#39;application/json&#39;</span><span class="p p-Indicator">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="raw-body">
+<h2>raw_body<a class="headerlink" href="#raw-body" title="Permalink to this headline">¶</a></h2>
+<p>This extracts the raw HTTP response body.
+This value can be tested with comparisons or extract tests.
+This does not take any configuration values.</p>
+<p>Example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">compare</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="nt">raw_body</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p p-Indicator">,</span><span class="nt"> comparator</span><span class="p">:</span> <span class="s">&quot;regex&quot;</span><span class="p p-Indicator">,</span><span class="nt"> expected</span><span class="p">:</span> <span class="s">&#39;.*&#39;</span><span class="p p-Indicator">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="validators.html" class="btn btn-neutral float-right" title="Validation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Abhilash Joseph C
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
