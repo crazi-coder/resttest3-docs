@@ -1,0 +1,216 @@
+Extractors
+===========
+
+Extractors are query-based ways to extract some part of an HTTP response
+body for use.
+
+This can be used as part of a validator or to capture values to a
+context variable for later use.
+
+Current extractors are limited, but the functions are pluggable -- it is
+very easy to add full JsonPath, regex matching, xpath, xquery, etc and
+use them in your testing.
+**An extractor definition looks like this:**
+
+.. code:: yaml
+
+    extractor_name: extractor_configuration
+
+Extractor configuration may be a simple string query, a templated
+string, or a more complex object. It's completely up to the extractor
+parsing function how to handle this.
+
+jsonpath_mini
+-------------
+The basic 'jsonpath\_mini' extractor provides a very limited
+`JsonPath <http://goessner.net/articles/JsonPath/>`__-like
+implementation to grab data from JSON, with no external library
+dependencies.
+
+The elements of this syntax are a list of keys or indexes, descending
+down a tree, seperated by periods. Numbers are assumed to be array
+indices.
+
+If you wish to return the whole object, you may use an empty "" query or
+"." -- this can be helpful for APIs returning an array of objects, where
+you want to count the number of objects returned (using countEq
+operator).
+
+Given this JSON:
+
+.. code:: json
+
+    {
+        "thing":{"foo":"bar"},
+        "link_ids": [1, 2, 3, 4],
+        "person":{
+            "firstname": "Bob",
+            "lastname": "Smith",
+            "age": 17
+        }
+    }
+
+- This query: ``person.lastname`` will return: ``Smith``
+- This query: ``person.is_a_ninja`` Will return: NOTHING (None object) -- that key is not defined for person
+- This query: ``link_ids.1``  Will return: 2
+- This query: ``thing`` Will return: ``{"foo":"bar"}``
+
+*Note that if you use this in templates it will appear as ``{'foo':
+'bar'}`` because it is converted to a python dictionary.*
+
+use it in other tests, you will need to extract the component elements
+individually.
+
+-  This query: '.' Will return: the whole response (as a python object). This can be
+   very useful if you want to do contains or count operations on it.
+
+-  This query: 'thing.0' Will return: None -- trick question, 'thing' is not an array!
+
+Super simple, super basic, but it actually will cover a lot of useful
+cases.
+
+
+.. code:: yaml
+
+    jsonpath_mini: {template: $keyname.age}
+
+-  If the context variable 'keyname' is set to 'person', this will
+   return 17.
+-  If it is set to 'thing', then it will return nothing (because the
+   'thing' object lacks an 'age' key)
+
+jmespath
+-------------------
+
+The 'jmespath' extractor provides fulll
+`JMESPath <http://jmespath.org/>`__ implementation to grab data from
+JSON and requires jmespath library to be available for import. Full
+range of JMESPath expressions is supported.
+
+Given this JSON:
+
+.. code:: json
+
+    {
+       "test1" : {"a": "foo", "b": "bar", "c": "baz"},
+       "test2" : {"a": {"b": {"c": {"d": "value"}}}},
+       "test3" : ["a", "b", "c", "d", "e", "f"],
+       "test4" : {
+          "a": {
+            "b": {
+              "c": [
+                {"d": [0, [1, 2]]},
+                {"d": [3, 4]}
+              ]
+            }
+          } },
+       "test5" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+       "test6" : {
+          "people": [
+             {"first": "James", "last": "d"},
+             {"first": "Jacob", "last": "e"},
+             {"first": "Jayden", "last": "f"},
+             {"missing": "different"}
+          ],
+          "foo": {"bar": "baz"}
+       },
+       "test7" : {
+          "ops": {
+             "functionA": {"numArgs": 2},
+             "functionB": {"numArgs": 3},
+             "functionC": {"variadic": 4}
+          }
+       },
+       "test8" : {
+          "reservations": [
+             { "instances": [ {"state": "running"}, {"state": "stopped"} ] },
+             { "instances": [ {"state": "terminated"}, {"state": "runnning"} ] }
+          ]
+       },
+       "test9" : [ [0, 1], 2, [3], 4, [5, [6, 7]] ],
+       "test10" : { "machines": [ {"name": "a", "state": "running"}, {"name": "b", "state": "stopped"}, {"name": "c", "state": "running"} ] },
+       "test11" : {
+          "people": [
+             { "name": "b", "age": 30, "state": {"hired": "ooo"} },
+             { "name": "a", "age": 50, "state": {"fired": "ooo"} },
+             { "name": "c", "age": 40, "state": {"hired": "atwork"} } ]
+       } ,
+       "test12" : { "myarray": [ "foo", "foobar", "barfoo", "bar", "baz", "barbaz", "barfoobaz" ] }
+    }
+
++---------------------------------------------------------------+--------------------------------------------------------------+
+| Query                                                         | Output                                                       |
++===============================================================+==============================================================+
+| ``'test1.a'``                                                 | ``"foo"``                                                    |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test1.b'``                                                 | ``"bar"``                                                    |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test1.c'``                                                 | ``"baz"``                                                    |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test2.a.b.c.d'``                                           | ``"value"``                                                  |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test3[1]'``                                                | ``"b"``                                                      |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test4.a.b.c[0].d[1][0]'``                                  | ``1``                                                        |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'length(test5[0:5])'``                                      | ``5``                                                        |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test5[1:3]'``                                              | ``'[1, 2]'``                                                 |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test5[::2]'``                                              | ``'[0, 2, 4, 6, 8]'``                                        |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test5[5:0:-1]'``                                           | ``'[5, 4, 3, 2, 1]'``                                        |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test6.people[*].first'``                                   | ``"['James', 'Jacob', 'Jayden']"``                           |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test6.people[:2].first'``                                  | ``"['James', 'Jacob']"``                                     |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test6.people[*].first | [0]'``                             | ``'James'``                                                  |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test7.ops.*.numArgs'``                                     | ``'[2, 3]'``                                                 |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test8.reservations[*].instances[*].state'``                | ``"[['running', 'stopped'], ['terminated', 'runnning']]"``   |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'test9[]'``                                                 | ``'[0, 1, 2, 3, 4, 5, [6, 7]]'``                             |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``"test10.machines[?state=='running'].name"``                 | ``"['a', 'c']"``                                             |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``"test10.machines[?state!='running'][name, state] | [0]"``   | ``"['b', 'stopped']"``                                       |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'length(test11.people)'``                                   | ``3``                                                        |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``'max_by(test11.people, &age).name'``                        | ``'a'``                                                      |
++---------------------------------------------------------------+--------------------------------------------------------------+
+| ``"test12.myarray[?contains(@, 'foo') == `true`]"``           | ``"['foo', 'foobar', 'barfoo', 'barfoobaz']"``               |
++---------------------------------------------------------------+--------------------------------------------------------------+
+
+header
+-----------------
+
+This extracts the value of an HTTP header from the response.
+This value can be tested with comparisons or extract tests.
+Note that **headers are case-insensitive**, 'content-type' and
+'Content-Type' will be the same. If multiple values are defined for the
+header, a list of values will be returned (example: cookies).
+
+Example:
+
+
+.. code:: yaml
+
+    compare: {header: 'content-type', expected: 'application/json'}
+
+raw_body
+--------------------
+
+This extracts the raw HTTP response body.
+This value can be tested with comparisons or extract tests.
+This does not take any configuration values.
+
+Example:
+
+
+.. code:: yaml
+
+    compare: {raw_body: "", comparator: "regex", expected: '.*'}
+
